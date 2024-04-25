@@ -1,0 +1,240 @@
+<!--
+    ioBroker.vis my-alarmviewer Widget-Set
+
+    version: "0.0.1"
+
+    Copyright 2023 Kamran Mustafayev gokturk413@gmail.com
+-->
+<head>
+<meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' 'unsafe-inline';
+               script-src 'self' 'unsafe-inline';
+               img-src 'self' data:;
+               font-src 'self' data: https://fonts.gstatic.com;
+               style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;"/>
+<!-- here you can include so many css as you want -->
+<link rel="stylesheet" href="widgets/my-alarmviewer/css/tabulator_midnight.css">
+<!--<link rel="stylesheet" href="widgets/my-alarmviewer/css/bootstrap.css">-->
+<link href="widgets/my-alarmviewer/css/material.css" rel="stylesheet" rel="stylesheet" />
+
+<script src="widgets/my-alarmviewer/js/tabulator.min.js"></script>
+<!--<script src="widgets/my-alarmviewer/js/bootstrap.js" type="text/javascript"></script>-->
+<script src="widgets/my-alarmviewer/js/ej2.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="widgets/my-alarmviewer/js/jspdf.umd.min.js"></script>
+<script type="text/javascript" src="widgets/my-alarmviewer/js/xlsx.full.min.js"></script>
+<script type="text/javascript" src="widgets/my-alarmviewer/js/jspdf.plugin.autotable.min.js"></script>
+<script type="text/javascript" src="widgets/my-alarmviewer/js/moment-with-locales.js"></script>
+
+
+
+
+<link rel="stylesheet" href="widgets/my-alarmviewer/css/style.css" />
+<!-- here you can include so many js-files as you want -->
+<script type="text/javascript" src="widgets/my-alarmviewer/js/my-alarmviewer.js"></script>
+</head>
+
+
+<style>
+
+    .alarmtype{
+        background-color:#FD0000;
+    }
+
+	.infotype{
+        background-color:#00CFFD;
+    }
+
+	.warningtype{
+        background-color:#F9FD00 ;
+    }
+
+
+    #alarmtable1 {
+        color: #333;
+        font-family: Helvetica, Arial, sans-serif;
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    .tdf, .thf {
+        border: 2px solid #dddddd;
+        text-align: center;
+        /*transition: all 0.3s;*/
+        /* Simple transition for hover effect */
+    }
+    .thf {
+        background: #0094CE;
+        /* Darken header a bit */
+        font-weight: bold;
+    }
+    .tdf {
+        background: #FAFAFA;
+        text-align: center;
+    }
+
+    .trf .tdf:hover {
+        background: #666;
+        color: #FFF;
+    }
+    #myAlarmAudio{
+        display:none;
+    }
+</style>
+
+
+<!-- the full description of format in data-vis-attrs can be found here:
+    https://github.com/ioBroker/ioBroker.vis/blob/master/www/js/visEditInspect.js#L39
+
+    ----------------------------------------------------------
+    Mandatory XML attributes:
+        id="tplMy-alarmviewerWIDGETNAME"
+        type="text/ejs"
+        class="vis-tpl"
+
+        "type" and "class" are always the same. "id" is unique and must start with "tplSETNAME" and ends with widget name. Use camel-case for it.
+
+    ----------------------------------------------------------
+    data-vis-attrs - divided with semicolon the list of attributes, like attr1/id;attr2/color
+        Full format of one attribute is: attr_name(start-end)[default_value]/type,idFilter/onChangeFunc
+            attr_name - the name of the attribute, e.g. "myID"
+            start-end - creates automatically attributes from attr_namestart to attr_nameend, like "myID(1-3)" creates myID1, myID2, myID3
+            default_value - by creation of widget this attribute will be filled with this value, e.g. "myID[#001122]/color"
+            type - some predefined types have edit helpers, else it will be shown as text field
+
+                Type format:
+                      id - Object ID Dialog
+                      checkbox
+                      image - image
+                      number,min,max,step - non-float number. min,max,step are optional
+                      color - color picker
+                      views - Name of the view
+                      effect - jquery UI show/hide effects
+                      eff_opt - additional option to effect slide (up, down, left, right)
+                      fontName - Font name
+                      slider,min,max,step - Default step is ((max - min) / 100)
+                      select,value1,value2,... - dropdown select
+                      nselect,value1,value2,... - same as select, but without translation of items
+                      style,fileFilter,nameFilter,attrFilter
+                      custom,functionName,options,... - custom editor - functionName is starting from vis.binds.[widgetset.funct]. E.g. custom/timeAndWeather.editWeather,short
+                      group.name - define new or old group. All following attributes belongs to new group till new group.xyz
+                      group.name/byindex - like group, but all following attributes will be grouped by ID. Like group.windows/byindex;slide(1-4)/id;slide_type(1-4)/select,open,closed  Following groups will be created Windows1(slide1,slide_type1), Windows2(slide2,slide_type2), Windows3(slide3,slide_type3), Windows4(slide4,slide_type4)
+                      text - dialog box with html editor
+                      html - dialog box with html editor
+
+                If type is "id", you can define filer for "Select ID Dialog", like "myID/id,level.temperature".
+                Additionally you can define callback(onChangeFunc), which will be called if this attribute was changed by user for different purposes: validate entry, fill other attributes, ...
+
+        You can define additional data-vis-attrs line: data-vis-attrs0, data-vis-attrs1. Anyway data-vis-attrs must be there. You may not skip numbers.
+        E.g. in "data-vis-attrs="A;" data-vis-attrs1="B" attribute B will be not parsed.
+
+    --------------------------------------------------------
+    data-vis-type
+        Help information for user. Used for search.
+        You can define more than one type divided by comma.
+        There are following common types, but you can use your own specific types:
+            ctrl   - widget that can write some Object IDs
+            val    - widget that shows some information from Object IDs
+            static - widget do not read information from Object IDs or URL
+            button - button widget
+            dimmer - dimmer widget
+            weather - weather widget
+            ...
+
+    --------------------------------------------------------
+    data-vis-set
+        Name of the widget set. Must be equal to the name of this HTML file
+
+    --------------------------------------------------------
+    data-vis-prev
+        Html code used as preview of this widget. If widget is complex you can just use image as preview:
+        data-vis-prev='<img src="widgets/hqwidgets/img/prev/Prev_tplMy-alarmviewerShowInstance.png"></img>'
+        Of course the image must exist.
+
+    --------------------------------------------------------
+    data-vis-name
+        Readable name of widget shown in vis editor.
+
+    --------------------------------------------------------
+    data-vis-beta="true"
+        Shows "BETA" symbol in vis editor by preview
+
+    --------------------------------------------------------
+    data-vis-update-style="true"
+        Call redraw of widget if some of the CSS styles in editor for this widget was changed
+
+    You can read about Magic tags here: http://canjs.com/guides/EJS.html
+    Following magic tags are exist:
+        <% %> - execute javascript
+        <%= %> - place escaped result to HTML document
+        <%== %> - place unescaped result to HTML document
+
+    You can do "if" conditions and "for" cycles.
+
+-->
+<script id="tplMy-alarmviewerShowInstance"
+        type="text/ejs"
+        class="vis-tpl"
+        data-vis-prev='<div id="prev_tplMy-alarmviewerShowInstance" style="position: relative; text-align: initial;padding: 4px "><div class="vis-widget_prev " style="width: 280px; height: 159px;" > <div class="my-alarmviewer-class vis-widget-prev-body " style="padding:2px"> OID: hm-rpc.0.EEQ0006629.1.STATE<br> OID value: true<br> Color: <span style="color: rgb(128, 0, 0);">#800000</span><br> htmlText: <textarea readonly="" style="width:100%">asda</textarea></div>'
+        data-vis-attrs="oid_Json/id;oid_IsAlarm/id;oid_Sound/id;oid_Ack/id;myColor/color;htmlText/text;"
+        data-vis-attrs0="group.extraMy-alarmviewer;extraAttr"
+        data-vis-set="my-alarmviewer"
+        data-vis-type="helper"
+        data-vis-name="my-alarmviewer">
+    <div class="vis-widget <%== this.data.attr('class') %>" style="width:230px; height:210px;" id="<%= this.data.attr('wid') %>" >
+        <div class="my-alarmviewer-class vis-widget-body <%== this.data.attr('class') %>" style="padding:2px" >
+            htmlText:<div id="alarm-table"></div><audio id="myAlarmAudio" controls loop><source id="playerSource" muted="muted" src="widgets/my-alarmviewer/sounds/Fire_pager.mp3" type="audio/ogg">Your browser does not support the audio element.</audio>
+            <%vis.binds['my-alarmviewer'].alarmviewer.createWidget(this.data.wid, this.view, this.data, this.style);%>
+            
+            <%debugger%>
+        </div>
+    </div>
+</script>
+
+
+<script id="tplMy-alarmviewerHistalarmviewer"
+        type="text/ejs"
+        class="vis-tpl"
+        data-vis-prev='<div id="prev_tplMy-alarmviewerShowInstance" style="position: relative; text-align: initial;padding: 4px "><div class="vis-widget_prev " style="width: 280px; height: 159px;" > <div class="my-alarmviewer-class vis-widget-prev-body " style="padding:2px"> OID: hm-rpc.0.EEQ0006629.1.STATE<br> OID value: true<br> Color: <span style="color: rgb(128, 0, 0);">#800000</span><br> htmlText: <textarea readonly="" style="width:100%">Get Historical Alarm</textarea></div>'
+        data-vis-attrs=""
+        data-vis-attrs0=""
+        data-vis-set="my-alarmviewer"
+        data-vis-type="helper"
+        data-vis-name="my-Historicalalarmviewer">
+    <div class="vis-widget <%== this.data.attr('class') %>" style="width:230px; height:210px;" id="<%= this.data.attr('wid') %>" >
+        <div class="my-alarmviewer-class vis-widget-body <%== this.data.attr('class') %>" style="padding:2px" >
+            <% window.ripple = true;
+            ej.base.registerLicense('ORg4AjUWIQA/Gnt2VVhkQlFadVdJXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXxRd0dhW39ac3RVQ2deVkM=');
+            ej.base.enableRipple(window.ripple);%>
+            <div class="row">
+                <div class="col-md-4"><input id="daterangepicker" type="text"/><button id="gethistalarm" type="button" class="btn btn-primary">Get Alarms</button></div>
+            </div>
+            <div class="row">
+                <h2 style="text-align: center;">Historical Alarms</h2>
+                <div class="col-md-4">
+                    <button class ="btn btn-primary" id ="download-xlsx" style="margin-bottom:5px">Download XLSX</button>
+                    <button class ="btn btn-primary" id ="download-csv" style="margin-bottom:5px">Download CSV</button>
+                    <button class ="btn btn-primary" id ="download-pdf" style="margin-bottom:5px">Download PDF</button>
+                </div>
+                <div id="histalarm-table"></div>
+            </div>
+            <%vis.binds['my-alarmviewer'].historicalalarmviewer.createWidget(this.data.wid, this.view, this.data, this.style, "Historical");%>
+            <%debugger%>
+        </div>
+    </div>
+</script>
+
+<!--<script id="tplMy-alarmviewerHelper"
+        type="text/ejs"
+        class="vis-tpl"
+        data-vis-prev='<div id="prev_tplMy-alarmviewerHelper" style="position: relative; text-align: initial;padding: 4px "><div class="vis-widget_prev " style="width: 280px; height: 159px;" > <div class="my-alarmviewer-class vis-widget-prev-body " style="padding:2px"> OID: hm-rpc.0.EEQ0006629.1.STATE<br> OID value: true<br> Color: <span style="color: rgb(128, 0, 0);">#800000</span><br> htmlText: <textarea readonly="" style="width:100%">asda</textarea></div>'
+        data-vis-attrs="oid/id;myColor/color;htmlText/text;"
+        data-vis-attrs0="group.extraMy-alarmviewer;extraAttr"
+        data-vis-set="my-alarmviewer"
+        data-vis-type="helper"
+        data-vis-name="Helper">
+    <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 230px; height: 210px" id="<%= this.data.attr('wid') %>"><%
+        vis.binds['my-alarmviewer'].createWidget(this.data.wid, this.view, this.data, this.style);
+    %></div>
+</script>-->

@@ -1,0 +1,84 @@
+{
+  "common": {
+    "name": "my-alarmviewer",
+    "version": "0.0.1",
+    "news": {
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "uk": "Початкова версія",
+        "zh-cn": "首次出版"
+      }
+    },
+    "title": "My Alarm Viewer for Vis",
+    "titleLang": {
+      "en": "My Alarm Viewer for Vis",
+      "de": "Mein Alarm-Viewer für Vis",
+      "ru": "Моя программа просмотра сигналов тревоги для Vis",
+      "pt": "Meu visualizador de alarme para Vis",
+      "nl": "Mijn Alarmviewer voor Vis",
+      "fr": "Mon visualiseur d'alarmes pour Vis",
+      "it": "Il mio visualizzatore di allarmi per Vis",
+      "es": "Mi visor de alarmas para Vis",
+      "pl": "Moja przeglądarka alarmów dla Vis",
+      "uk": "My Alarm Viewer для Vis",
+      "zh-cn": "我的 Vis 警报查看器"
+    },
+    "desc": {
+      "en": "My-Alarm adapter Viewer widget For Vis",
+      "de": "My-Alarm-Adapter Viewer-Widget für Vis",
+      "ru": "Адаптер My-Alarm Виджет просмотра для Vis",
+      "pt": "Widget visualizador do adaptador My-Alarm para Vis",
+      "nl": "My-Alarm-adapter Viewer-widget Voor Vis",
+      "fr": "Widget de visualisation de l'adaptateur My-Alarm pour Vis",
+      "it": "Widget visualizzatore adattatore My-Alarm Per Vis",
+      "es": "Widget de visor del adaptador My-Alarm para Vis",
+      "pl": "Adapter My-Alarm Widżet przeglądarki dla Vis",
+      "uk": "Віджет перегляду адаптера My-Alarm для Vis",
+      "zh-cn": "My-Alarm 适配器 Vis 查看器小部件"
+    },
+    "authors": [
+      "Kamran Mustafayev <gokturk413@gmail.com>"
+    ],
+    "keywords": [
+      "My-alarm",
+      "widget",
+      "viewer",
+      "vis"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "my-alarmviewer.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/gokturk413/ioBroker.my-alarmviewer/master/admin/my-alarmviewer.png",
+    "readme": "https://github.com/gokturk413/ioBroker.my-alarmviewer/blob/master/README.md",
+    "loglevel": "info",
+    "restartAdapters": [
+      "vis"
+    ],
+    "onlyWWW": true,
+    "noConfig": true,
+    "singleton": true,
+    "type": "visualization-widgets",
+    "mode": "once",
+    "dependencies": [
+      "vis"
+    ],
+    "globalDependencies": [],
+    "installedFrom": "gokturk413/ioBroker.my-alarmviewer"
+  },
+  "native": {
+    "option1": true,
+    "option2": "42"
+  },
+  "objects": [],
+  "instanceObjects": []
+}

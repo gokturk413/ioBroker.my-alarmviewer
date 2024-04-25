@@ -1,0 +1,51 @@
+{
+  "name": "iobroker.my-alarmviewer",
+  "version": "0.0.1",
+  "description": "My-Alarm adapter Viewer widget For Vis",
+  "author": {
+    "name": "Kamran Mustafayev",
+    "email": "gokturk413@gmail.com"
+  },
+  "homepage": "https://github.com/gokturk413/ioBroker.my-alarmviewer",
+  "license": "MIT",
+  "keywords": [
+    "My-alarm",
+    "widget",
+    "viewer",
+    "vis"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:gokturk413/ioBroker.my-alarmviewer.git"
+  },
+  "engines": {
+    "node": ">= 16"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@alcalzone/release-script": "^3.6.0",
+    "@alcalzone/release-script-plugin-iobroker": "^3.6.0",
+    "@alcalzone/release-script-plugin-license": "^3.5.9",
+    "@alcalzone/release-script-plugin-manual-review": "^3.5.9",
+    "@iobroker/adapter-dev": "^1.2.0",
+    "@iobroker/testing": "^4.1.0"
+  },
+  "main": "widgets/my-alarmviewer.html",
+  "files": [
+    "widgets/**/!(tsconfig|tsconfig.*|.eslintrc).json",
+    "widgets/**/*.{html,css,png,svg,jpg,js}",
+    "www/",
+    "io-package.json",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test:package": "mocha test/package --exit",
+    "test": "npm run test:package",
+    "translate": "translate-adapter",
+    "release": "release-script"
+  },
+  "bugs": {
+    "url": "https://github.com/gokturk413/ioBroker.my-alarmviewer/issues"
+  },
+  "readmeFilename": "README.md"
+}
